@@ -36,7 +36,7 @@ function App() {
 
 	const Add = () => {
 		if (loteria != "") {
-			if (numero != 0 && numero > 99 && numero < 10000) {
+			if (numero != 0 && numero.length >= 3 && numero.length <= 4  ) {
 				if (precio != 0) {
 					const nuevaLoteria = {
 						nombre: loteria,
@@ -110,7 +110,7 @@ function App() {
 					</select>
 					<h1 className="ml-2">Numero</h1>
 					<input
-						type="number"
+						type="text"
 						className="w-20 border border-stone-900 bg-transparent"
 						min={100}
 						max={9999}
