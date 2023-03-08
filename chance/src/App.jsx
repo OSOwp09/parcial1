@@ -14,10 +14,11 @@ function App() {
 	const [numero, setNumero] = useState(0);
 	const [precio, setPrecio] = useState(0);
 	const [loteria, setLoteria] = useState(0);
+	const [loterias, setLoterias] = useState("");
+	const [check, setCheck] = useState("");
+
 	const [messageNum, setMessageNum] = useState("");
 	const [messagePre, setMessagePre] = useState("");
-
-	const listaLoterias = [{}];
 
 	const handleChangeLoteria = (event) => {
 		setLoteria(event.target.value);
@@ -33,37 +34,69 @@ function App() {
 		setPrecio(event.target.value);
 	};
 
-	const Add = () => {	
+	const Add = () => {
+		if (loteria != "") {
+			if (numero != 0 && numero > 99 && numero < 10000) {
+				if (precio != 0) {
+					const nuevaLoteria = {
+						nombre: loteria,
+						num: numero,
+						pre: precio,
+					};
 
-		listaLoterias.push({
-			nombre: loteria,
-			num: numero,
-			pre: precio,
-		});
-    
-		console.log(listaLoterias);
-
+					const loteriaCopy = [...loterias];
+					loteriaCopy.push(nuevaLoteria);
+					setLoterias(loteriaCopy);
+					setCheck("");
+				}else{
+					setCheck("Coloque el precio");
+				}
+			} else {
+				setCheck("Elija un numero de 3 o 4 digitos");
+			}
+		} else {
+			setCheck("Elija un chance");
+		}
 	};
 
-	const Print = () => {
-		const lista = [
-			...Array(listaLoterias.length).map((x, i) => (
-				<>
-					<div className="flex gap-3">
-						<h1>{listaLoterias[i].nombre}</h1>
-						<h1>{listaLoterias[i].numero}</h1>
-						<h1>{listaLoterias[i].precio}</h1>
-					</div>
-				</>
-			)),
-		];
+	const [lista, setLista] = useState("");
 
-		return (<>{lista}</>);
+	const Print = () => {
+		let total = 0;
+
+		for (let index = 0; index < loterias.length; index++) {
+			total = total + Number(loterias[index].pre);
+		}
+
+		setLista(
+			<>
+				<div className="flex gap-3 font-semibold">
+					<h1>Chance</h1>
+					<h1>Numero</h1>
+					<h1>Precio</h1>
+				</div>
+				{[...Array(loterias.length)].map((x, i) => (
+					<div className="flex gap-3">
+						<h1>{loterias[i].nombre}</h1>
+						<h1>{loterias[i].num}</h1>
+						<h1>{loterias[i].pre}</h1>
+					</div>
+				))}
+				<hr className="mt-3" size="2px" width="75%" color="black" />
+				<div className="mt-3 flex gap-3">
+					<h1>Precio total: </h1>
+					<h1>{total}</h1>
+				</div>
+			</>
+		);
+
+		console.log(total);
 	};
 
 	return (
 		<>
 			<div className="m-3">
+				<h1 className="mb-2 text-red-600">{check}</h1>
 				<div className="flex gap-2">
 					<h1>Loteria</h1>
 					<select
@@ -81,23 +114,24 @@ function App() {
 						className="w-20 border border-stone-900 bg-transparent"
 						min={100}
 						max={9999}
-						value={messageNum}
+						//value={messageNum}
 						onChange={(event) => handleChangeNumero(event)}
 					/>
 					<h1 className="ml-2">Precio</h1>
 					<input
 						type="number"
 						className="w-20 border border-stone-900 bg-transparent"
-						value={messagePre}
+						//value={messagePre}
 						onChange={(event) => handleChangePrecio(event)}
 					/>
 					<button className="border px-1 border-stone-900" onClick={Add}>
 						Add
 					</button>
-					<button className="border px-1 border-stone-900" onClick={"Print"}>
+					<button className="border px-1 border-stone-900" onClick={Print}>
 						Print
 					</button>
 				</div>
+				<div className="mt-5">{lista}</div>
 			</div>
 		</>
 	);
